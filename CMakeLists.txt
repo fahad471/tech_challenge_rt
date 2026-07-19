@@ -74,13 +74,7 @@ add_library(segfault_plugin SHARED
     plugin/src/segfault_plugin.cpp
 )
 
-# Only needed if segfault_plugin.cpp uses DbgHelp functions such as SymFromAddr.
-if(WIN32)
-    target_link_libraries(segfault_plugin
-        PRIVATE
-            dbghelp
-    )
-endif()
+
 
 # ---------------------------------------------------------------------------
 # Main application
@@ -88,6 +82,7 @@ endif()
 
 add_executable(challenge
     app/src/main.cpp
+    app/src/segfault_autoload.cpp
 )
 
 target_include_directories(challenge
@@ -104,7 +99,11 @@ target_link_libraries(challenge
 
 # challenge intentionally does not link against the plugin target.
 # This dependency only guarantees that the plugin is built first.
-add_dependencies(challenge plugin)
+add_dependencies(
+    challenge
+    plugin
+    segfault_plugin
+)
 
 # ---------------------------------------------------------------------------
 # Tests
@@ -177,5 +176,54 @@ if(BUILD_TESTING)
 
     set_tests_properties(segfault_plugin_tests PROPERTIES
         WORKING_DIRECTORY "$<TARGET_FILE_DIR:segfault_plugin_tests>"
+    )
+endif()
+
+# ---------------------------------------------------------------------------
+# Installation
+# ---------------------------------------------------------------------------
+
+set_target_properties(segfault_plugin PROPERTIES
+    OUTPUT_NAME plugin_segfault
+)
+
+if(UNIX AND NOT APPLE)
+    set_target_properties(challenge PROPERTIES
+        INSTALL_RPATH "$ORIGIN/../lib"
+    )
+
+    set_target_properties(plugin PROPERTIES
+        INSTALL_RPATH "$ORIGIN"
+    )
+
+    target_link_options(plugin PRIVATE
+        "-Wl,--disable-new-dtags"
+    )
+endif()
+
+install(
+    TARGETS
+        challenge
+        plugin
+        segfault_plugin
+
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+if(WIN32)
+    install(
+        DIRECTORY "${boost_BIN_DIRS_RELEASE}/"
+        DESTINATION bin
+        FILES_MATCHING
+        PATTERN "*.dll"
+    )
+else()
+    install(
+        DIRECTORY "${boost_LIB_DIRS_RELEASE}/"
+        DESTINATION lib
+        FILES_MATCHING
+        PATTERN "*.so*"
     )
 endif()

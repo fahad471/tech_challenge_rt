@@ -26,7 +26,7 @@ class PluginLoader {
 #else
         handle_ = dlopen(path.c_str(), RTLD_LAZY);
         if (!handle_) {
-            std::cerr << "Failed to load plugin: " << dlerror() << std::endl;
+            std::cerr << "Failed to load plugin: " << dlerror() << '\n';
         }
 #endif
     }
@@ -100,11 +100,11 @@ std::string find_plugin(const char *argv0) {
 
 int main(int argc, char *argv[]) {
     auto plugin_path = find_plugin(argv[0]);
-    std::cout << "Loading plugin from: " << plugin_path << std::endl;
+    std::cout << "Loading plugin from: " << plugin_path << '\n';
 
     PluginLoader loader(plugin_path);
     if (!loader.is_loaded()) {
-        std::cerr << "Could not load the plugin library." << std::endl;
+        std::cerr << "Could not load the plugin library.\n";
         return EXIT_FAILURE;
     }
 
@@ -113,18 +113,18 @@ int main(int argc, char *argv[]) {
     auto add_fn = loader.get_symbol<plugin_add_fn>("plugin_add");
 
     if (!init_fn || !name_fn || !add_fn) {
-        std::cerr << "Failed to resolve plugin symbols." << std::endl;
+        std::cerr << "Failed to resolve plugin symbols.\n";
         return EXIT_FAILURE;
     }
 
     int rc = init_fn();
     if (rc != 0) {
-        std::cerr << "plugin_init failed with code " << rc << std::endl;
+        std::cerr << "plugin_init failed with code " << rc << '\n';
         return EXIT_FAILURE;
     }
 
-    std::cout << "Plugin name : " << name_fn() << std::endl;
-    std::cout << "plugin_add(3, 4) = " << add_fn(3, 4) << std::endl;
+    std::cout << "Plugin name : " << name_fn() << '\n';
+    std::cout << "plugin_add(3, 4) = " << add_fn(3, 4) << '\n';
 
     return EXIT_SUCCESS;
 }

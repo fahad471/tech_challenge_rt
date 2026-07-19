@@ -8,37 +8,30 @@
 
 using plugin_init_fn = int (*)();
 
-int main(int argc, char **argv)
-{
-    if (argc != 2)
-    {
+int main(int argc, char **argv) {
+    if (argc != 2) {
         return 1;
     }
 
 #ifdef _WIN32
     HMODULE library = LoadLibraryA(argv[1]);
 
-    if (library == nullptr)
-    {
+    if (library == nullptr) {
         return 2;
     }
 
-    auto plugin_init = reinterpret_cast<plugin_init_fn>(
-        GetProcAddress(library, "plugin_init"));
+    auto plugin_init = reinterpret_cast<plugin_init_fn>(GetProcAddress(library, "plugin_init"));
 #else
     void *library = dlopen(argv[1], RTLD_NOW);
 
-    if (library == nullptr)
-    {
+    if (library == nullptr) {
         return 2;
     }
 
-    auto plugin_init =
-        reinterpret_cast<plugin_init_fn>(dlsym(library, "plugin_init"));
+    auto plugin_init = reinterpret_cast<plugin_init_fn>(dlsym(library, "plugin_init"));
 #endif
 
-    if (plugin_init == nullptr || plugin_init() != 0)
-    {
+    if (plugin_init == nullptr || plugin_init() != 0) {
         return 3;
     }
 

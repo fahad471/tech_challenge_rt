@@ -1,8 +1,8 @@
 #include "plugin/plugin.h"
 
 #include <boost/log/trivial.hpp>
-#include <boost/log/utility/setup/console.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
+#include <boost/log/utility/setup/console.hpp>
 
 namespace {
 
@@ -13,9 +13,7 @@ struct LogInitializer {
     }
 };
 
-void ensure_log_initialized() {
-    static LogInitializer init;
-}
+void ensure_log_initialized() { static LogInitializer init; }
 
 } // namespace
 
@@ -27,13 +25,10 @@ PLUGIN_API int plugin_init(void) {
     return 0;
 }
 
-PLUGIN_API const char* plugin_get_name(void) {
-    return "challange_plugin";
-}
+PLUGIN_API const char *plugin_get_name(void) { return "challange_plugin"; }
 
 PLUGIN_API int plugin_add(int a, int b) {
     BOOST_LOG_TRIVIAL(debug) << "plugin_add(" << a << ", " << b << ") called";
     return a + b;
 }
-
 }

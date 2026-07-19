@@ -1,25 +1,25 @@
-#include <gtest/gtest.h>
 #include "plugin/plugin.h"
+#include <gtest/gtest.h>
 
 #include <cstdlib>
 #include <filesystem>
 #include <string>
 
 #ifdef _WIN32
-    #include <windows.h>
+#include <windows.h>
 #else
-    #include <dlfcn.h>
+#include <dlfcn.h>
 #endif
 
 namespace {
 
 using plugin_init_fn = int (*)();
-using plugin_get_name_fn = const char* (*)();
+using plugin_get_name_fn = const char *(*)();
 using plugin_add_fn = int (*)(int, int);
 
 class PluginLoader {
-public:
-    explicit PluginLoader(const std::string& path) {
+  public:
+    explicit PluginLoader(const std::string &path) {
 #ifdef _WIN32
         handle_ = LoadLibraryA(path.c_str());
 #else
@@ -28,7 +28,8 @@ public:
     }
 
     ~PluginLoader() {
-        if (!handle_) return;
+        if (!handle_)
+            return;
 #ifdef _WIN32
         FreeLibrary(static_cast<HMODULE>(handle_));
 #else
@@ -36,12 +37,12 @@ public:
 #endif
     }
 
-    PluginLoader(const PluginLoader&) = delete;
-    PluginLoader& operator=(const PluginLoader&) = delete;
+    PluginLoader(const PluginLoader &) = delete;
+    PluginLoader &operator=(const PluginLoader &) = delete;
 
-    template <typename T>
-    T get_symbol(const char* name) const {
-        if (!handle_) return nullptr;
+    template <typename T> T get_symbol(const char *name) const {
+        if (!handle_)
+            return nullptr;
 #ifdef _WIN32
         return reinterpret_cast<T>(GetProcAddress(static_cast<HMODULE>(handle_), name));
 #else
@@ -51,13 +52,14 @@ public:
 
     [[nodiscard]] bool is_loaded() const { return handle_ != nullptr; }
 
-private:
-    void* handle_ = nullptr;
+  private:
+    void *handle_ = nullptr;
 };
 
 std::string get_plugin_path() {
-    const char* env = std::getenv("PLUGIN_PATH");
-    if (env) return env;
+    const char *env = std::getenv("PLUGIN_PATH");
+    if (env)
+        return env;
 
     auto exe_dir = std::filesystem::path(".");
 #ifdef _WIN32
@@ -70,23 +72,19 @@ std::string get_plugin_path() {
 }
 
 class PluginTest : public ::testing::Test {
-protected:
+  protected:
     void SetUp() override {
         loader_ = std::make_unique<PluginLoader>(get_plugin_path());
         ASSERT_TRUE(loader_->is_loaded()) << "Plugin library not found. "
-            "Set PLUGIN_PATH or run from the build/bin directory.";
+                                             "Set PLUGIN_PATH or run from the build/bin directory.";
     }
 
-    void TearDown() override {
-        loader_.reset();
-    }
+    void TearDown() override { loader_.reset(); }
 
     std::unique_ptr<PluginLoader> loader_;
 };
 
-TEST_F(PluginTest, PluginLoadsSuccessfully) {
-    EXPECT_TRUE(loader_->is_loaded());
-}
+TEST_F(PluginTest, PluginLoadsSuccessfully) { EXPECT_TRUE(loader_->is_loaded()); }
 
 TEST_F(PluginTest, InitReturnsZero) {
     auto fn = loader_->get_symbol<plugin_init_fn>("plugin_init");

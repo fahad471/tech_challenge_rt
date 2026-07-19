@@ -6,18 +6,18 @@
 #include <string>
 
 #ifdef _WIN32
-    #include <windows.h>
+#include <windows.h>
 #else
-    #include <dlfcn.h>
+#include <dlfcn.h>
 #endif
 
 using plugin_init_fn = int (*)();
-using plugin_get_name_fn = const char* (*)();
+using plugin_get_name_fn = const char *(*)();
 using plugin_add_fn = int (*)(int, int);
 
 class PluginLoader {
-public:
-    explicit PluginLoader(const std::string& path) {
+  public:
+    explicit PluginLoader(const std::string &path) {
 #ifdef _WIN32
         handle_ = LoadLibraryA(path.c_str());
         if (!handle_) {
@@ -32,7 +32,8 @@ public:
     }
 
     ~PluginLoader() {
-        if (!handle_) return;
+        if (!handle_)
+            return;
 #ifdef _WIN32
         FreeLibrary(static_cast<HMODULE>(handle_));
 #else
@@ -40,14 +41,14 @@ public:
 #endif
     }
 
-    PluginLoader(const PluginLoader&) = delete;
-    PluginLoader& operator=(const PluginLoader&) = delete;
+    PluginLoader(const PluginLoader &) = delete;
+    PluginLoader &operator=(const PluginLoader &) = delete;
 
-    PluginLoader(PluginLoader&& other) noexcept : handle_(other.handle_) {
+    PluginLoader(PluginLoader &&other) noexcept : handle_(other.handle_) {
         other.handle_ = nullptr;
     }
 
-    PluginLoader& operator=(PluginLoader&& other) noexcept {
+    PluginLoader &operator=(PluginLoader &&other) noexcept {
         if (this != &other) {
             handle_ = other.handle_;
             other.handle_ = nullptr;
@@ -55,9 +56,9 @@ public:
         return *this;
     }
 
-    template <typename T>
-    T get_symbol(const char* name) const {
-        if (!handle_) return nullptr;
+    template <typename T> T get_symbol(const char *name) const {
+        if (!handle_)
+            return nullptr;
 #ifdef _WIN32
         return reinterpret_cast<T>(GetProcAddress(static_cast<HMODULE>(handle_), name));
 #else
@@ -67,25 +68,26 @@ public:
 
     [[nodiscard]] bool is_loaded() const { return handle_ != nullptr; }
 
-private:
-    void* handle_ = nullptr;
+  private:
+    void *handle_ = nullptr;
 };
 
-std::string find_plugin(const char* argv0) {
+std::string find_plugin(const char *argv0) {
     auto exe_dir = std::filesystem::path(argv0).parent_path();
-    if (exe_dir.empty()) exe_dir = ".";
+    if (exe_dir.empty())
+        exe_dir = ".";
 
 #ifdef _WIN32
-    constexpr const char* name = "plugin.dll";
+    constexpr const char *name = "plugin.dll";
 #elif defined(__APPLE__)
-    constexpr const char* name = "libplugin.dylib";
+    constexpr const char *name = "libplugin.dylib";
 #else
-    constexpr const char* name = "libplugin.so";
+    constexpr const char *name = "libplugin.so";
 #endif
 
     // Build layout: plugin sits next to the executable.
     // Install layout (Linux/macOS): plugin lives in ../lib/ relative to bin/.
-    for (auto&& candidate : {
+    for (auto &&candidate : {
              exe_dir / name,
              exe_dir / ".." / "lib" / name,
          }) {
@@ -96,7 +98,7 @@ std::string find_plugin(const char* argv0) {
     return (exe_dir / name).string();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
     auto plugin_path = find_plugin(argv[0]);
     std::cout << "Loading plugin from: " << plugin_path << std::endl;
 

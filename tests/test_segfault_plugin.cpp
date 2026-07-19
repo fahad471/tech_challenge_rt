@@ -5,16 +5,13 @@
 #include <fstream>
 #include <string>
 
-TEST(SegfaultPluginTest, WritesSegfaultReport)
-{
+TEST(SegfaultPluginTest, WritesSegfaultReport) {
     std::filesystem::remove("segfault_report.txt");
 
 #ifdef _WIN32
-    const std::string command =
-        "segfault_helper.exe plugin_segfault.dll";
+    const std::string command = "segfault_helper.exe plugin_segfault.dll";
 #else
-    const std::string command =
-        "./segfault_helper ./libplugin_segfault.so";
+    const std::string command = "./segfault_helper ./libplugin_segfault.so";
 #endif
 
     const int result = std::system(command.c_str());
@@ -24,9 +21,8 @@ TEST(SegfaultPluginTest, WritesSegfaultReport)
 
     std::ifstream file("segfault_report.txt");
 
-    const std::string contents{
-        std::istreambuf_iterator<char>{file},
-        std::istreambuf_iterator<char>{}};
+    const std::string contents{std::istreambuf_iterator<char>{file},
+                               std::istreambuf_iterator<char>{}};
 
     EXPECT_NE(contents.find("Stack trace:"), std::string::npos);
 }

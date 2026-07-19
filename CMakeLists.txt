@@ -67,6 +67,22 @@ target_link_libraries(plugin
 #     WINDOWS_EXPORT_ALL_SYMBOLS ON
 # )
 # ---------------------------------------------------------------------------
+# segfault detection plugin
+# ---------------------------------------------------------------------------
+
+add_library(segfault_plugin SHARED
+    plugin/src/segfault_plugin.cpp
+)
+
+# Only needed if segfault_plugin.cpp uses DbgHelp functions such as SymFromAddr.
+if(WIN32)
+    target_link_libraries(segfault_plugin
+        PRIVATE
+            dbghelp
+    )
+endif()
+
+# ---------------------------------------------------------------------------
 # Main application
 # ---------------------------------------------------------------------------
 
@@ -99,6 +115,7 @@ include(CTest)
 if(BUILD_TESTING)
     find_package(GTest CONFIG REQUIRED)
 
+    # Original plugin tests
     add_executable(plugin_tests
         tests/test_plugin.cpp
     )
@@ -114,7 +131,6 @@ if(BUILD_TESTING)
             ${CMAKE_DL_LIBS}
     )
 
-    # The tests load the plugin at runtime rather than linking against it.
     add_dependencies(plugin_tests plugin)
 
     add_test(
@@ -124,5 +140,42 @@ if(BUILD_TESTING)
 
     set_tests_properties(plugin_tests PROPERTIES
         WORKING_DIRECTORY "$<TARGET_FILE_DIR:plugin_tests>"
+    )
+
+    # Helper process that intentionally crashes
+    add_executable(segfault_helper
+        tests/segfault_helper.cpp
+    )
+
+    target_link_libraries(segfault_helper
+        PRIVATE
+            ${CMAKE_DL_LIBS}
+    )
+
+    add_dependencies(segfault_helper segfault_plugin)
+
+    # segfault plugin test
+    add_executable(segfault_plugin_tests
+        tests/test_segfault_plugin.cpp
+    )
+
+    target_link_libraries(segfault_plugin_tests
+        PRIVATE
+            GTest::gtest_main
+    )
+
+    add_dependencies(
+        segfault_plugin_tests
+        segfault_helper
+        segfault_plugin
+    )
+
+    add_test(
+        NAME segfault_plugin_tests
+        COMMAND segfault_plugin_tests
+    )
+
+    set_tests_properties(segfault_plugin_tests PROPERTIES
+        WORKING_DIRECTORY "$<TARGET_FILE_DIR:segfault_plugin_tests>"
     )
 endif()

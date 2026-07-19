@@ -86,7 +86,7 @@ jobs:
 
       - name: Configure Windows
         if: runner.os == 'Windows'
-        run: cmake --preset conan-default
+        run: cmake --preset conan-release
 
       - name: Build
         run: cmake --build --preset conan-release
@@ -212,7 +212,7 @@ jobs:
 
       - name: Configure Windows
         if: runner.os == 'Windows'
-        run: cmake --preset conan-default
+        run: cmake --preset conan-release
 
       - name: Build
         run: cmake --build --preset conan-release
@@ -223,7 +223,7 @@ jobs:
 
       - name: Install Windows
         if: runner.os == 'Windows'
-        run: cmake --install build --config Release --prefix package
+        run: cmake --install build/Release --config Release --prefix package
 
       - name: Create Linux archive
         if: runner.os != 'Windows'

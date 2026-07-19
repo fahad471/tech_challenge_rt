@@ -1,7 +1,6 @@
 #include <cstdio>
 
 #ifdef _WIN32
-#include <dbghelp.h>
 #include <windows.h>
 
 namespace {

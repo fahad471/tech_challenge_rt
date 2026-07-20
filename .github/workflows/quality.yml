@@ -301,11 +301,73 @@ jobs:
           path: ${{ matrix.archive }}
           if-no-files-found: error
 
+    conan-package:
+    name: Conan Package (${{ matrix.name }})
+    needs:
+      - build-test
+      - lint
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+            archive: challenge-conan-package.tar.gz
+
+          - name: Windows
+            os: windows-latest
+            archive: challenge-conan-package-windows.tar.gz
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Conan
+        run: python -m pip install "conan>=2,<3"
+
+      - name: Set up MSVC
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Create Conan profile
+        run: conan profile detect --force
+
+      - name: Create and test Conan package
+        run: >
+          conan create .
+          --build=missing
+          -s build_type=Release
+          -s compiler.cppstd=20
+
+      - name: Save Conan package
+        run: >
+          conan cache save
+          "challenge_project/1.0.0:*"
+          --file="${{ matrix.archive }}"
+
+      - name: Upload Conan package
+        uses: actions/upload-artifact@v4
+        with:
+          name: conan-package-${{ runner.os }}
+          path: ${{ matrix.archive }}
+          if-no-files-found: error
+
   release:
     name: Release
     if: startsWith(github.ref, 'refs/tags/v')
     needs:
       - install-package
+      - conan-package
 
     runs-on: ubuntu-latest
 

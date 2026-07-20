@@ -1,11 +1,20 @@
 import os
 
 from conan import ConanFile
-from conan.tools.cmake import CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 
 
 class RuntimePluginChallengeConan(ConanFile):
+    name = "challenge_project"
+    version = "1.0.0"
+    package_type = "shared-library"
     settings = "os", "arch", "compiler", "build_type"
+    exports_sources = (
+        "CMakeLists.txt",
+        "app/*",
+        "plugin/*",
+        "tests/*",
+    )
 
     default_options = {
         "boost/*:shared": True,
@@ -44,3 +53,28 @@ class RuntimePluginChallengeConan(ConanFile):
         )
 
         toolchain.generate()
+        
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
+    def package(self):
+        cmake = CMake(self)
+        cmake.install()
+
+    def package_info(self):
+        plugin = self.cpp_info.components["plugin"]
+        plugin.libs = ["plugin"]
+        plugin.requires = ["boost::log"]
+        plugin.set_property(
+            "cmake_target_name",
+            "challenge_project::plugin",
+        )
+
+        segfault_plugin = self.cpp_info.components["segfault_plugin"]
+        segfault_plugin.libs = ["plugin_segfault"]
+        segfault_plugin.set_property(
+            "cmake_target_name",
+            "challenge_project::segfault_plugin",
+        )

@@ -234,6 +234,11 @@ install(
     ARCHIVE DESTINATION lib
 )
 
+install(
+    DIRECTORY plugin/include/
+    DESTINATION include
+)
+
 if(WIN32)
     install(
         DIRECTORY "${boost_BIN_DIRS_RELEASE}/"

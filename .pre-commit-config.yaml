@@ -1,4 +1,4 @@
-exclude: ^(build/|test_package/build/)/
+exclude: ^(build/|test_package/build/)
 
 repos:
   - repo: https://github.com/pre-commit/mirrors-clang-format

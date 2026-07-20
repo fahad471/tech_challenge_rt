@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - "v*"
+      - "v*.*.*"
   pull_request:
 
 permissions:
@@ -353,7 +353,7 @@ jobs:
         run: >
           conan cache save
           "challenge_project/1.0.0:*"
-          --file="${{ matrix.archive }}"
+          --out-file="${{ matrix.archive }}"
 
       - name: Upload Conan package
         uses: actions/upload-artifact@v4

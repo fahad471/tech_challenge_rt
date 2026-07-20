@@ -1,3 +1,5 @@
 /build/
+/install/
+/test_package/build/
 /CMakeUserPresets.json
 challenge-conan-package*.tar.gz

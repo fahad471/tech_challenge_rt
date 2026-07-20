@@ -1,1 +1,0 @@
-. "/d/Agile_Robot/tech_challenge_rt/test_package/build/gcc-11-x86_64-20-release/generators/deactivate_conanrunenv-release-x86_64.sh"

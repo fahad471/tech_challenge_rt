@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\Agile_Robot\tech_challenge_rt\test_package\build\msvc-193-x86_64-20-release\CMakeFiles\338322110a48db18dfa361e1f598bead\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{936A2B39-AA7E-3C5E-87C0-EA282C851AE4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

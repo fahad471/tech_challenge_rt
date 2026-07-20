@@ -13,7 +13,7 @@ set(Boost_FIND_MODE "NO_MODULE")
 
 ########### VARIABLES #######################################################################
 #############################################################################################
-set(challenge_project_PACKAGE_FOLDER_RELEASE "/home/fahad471/.conan2/p/b/chall83fc5fb07bda0/p")
+set(challenge_project_PACKAGE_FOLDER_RELEASE "/home/fahad471/.conan2/p/b/chall47cf0ddfe6c88/p")
 set(challenge_project_BUILD_MODULES_PATHS_RELEASE )
 
 

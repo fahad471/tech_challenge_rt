@@ -1,0 +1,10 @@
+^D:\AGILE_ROBOT\TECH_CHALLENGE_RT\TEST_PACKAGE\BUILD\MSVC-193-X86_64-20-RELEASE\CMAKEFILES\338322110A48DB18DFA361E1F598BEAD\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/Agile_Robot/tech_challenge_rt/test_package -BD:/Agile_Robot/tech_challenge_rt/test_package/build/msvc-193-x86_64-20-release --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/Agile_Robot/tech_challenge_rt/test_package/build/msvc-193-x86_64-20-release/challenge_test_package.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

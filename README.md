@@ -24,6 +24,31 @@ git clone https://github.com/fahad471/tech_challenge_rt.git
 cd tech_challenge_rt
 ```
 
+## Clean Build Files
+
+When switching operating systems, compilers, or Conan profiles, remove the existing generated files before running conan install.
+
+### Linux
+
+```bash
+rm -rf build install CMakeUserPresets.json
+```
+
+### Windows PowerShell
+
+```bash
+Remove-Item -Recurse -Force build, install -ErrorAction SilentlyContinue
+Remove-Item CMakeUserPresets.json -Force -ErrorAction SilentlyContinue
+```
+
+### Windows Command Prompt
+
+```bash
+rmdir /s /q build
+rmdir /s /q install
+del /q CMakeUserPresets.json
+```
+
 ## Build and Test
 
 ### Linux with GCC
@@ -58,7 +83,7 @@ ctest --preset conan-release --output-on-failure
 
 ### Windows with MSVC
 
-Run the following commands from a Visual Studio 2022 Developer PowerShell:
+Run these commands from Developer PowerShell for Visual Studio 2022:
 
 ```powershell
 conan profile detect --force
@@ -73,6 +98,8 @@ cmake --build --preset conan-release
 ctest --preset conan-release --output-on-failure
 ```
 
+cmake --install build --config Release --prefix package
+
 ## Run
 
 The executable discovers and loads the available plugins at runtime.
@@ -86,7 +113,7 @@ The executable discovers and loads the available plugins at runtime.
 ### Windows
 
 ```powershell
-.\build\Release\bin\challenge.exe
+.\build\bin\challenge.exe
 ```
 
 ## Code Quality
@@ -143,25 +170,47 @@ The install step creates a self-contained directory containing the executable, r
 ### Linux
 
 ```bash
-cmake --install build/Release --prefix package
+cmake --preset conan-release \
+  -DCMAKE_INSTALL_PREFIX="$PWD/install"
+cmake --build --preset conan-release --target install
 ```
 
 Run the installed executable:
 
 ```bash
-./package/bin/challenge
+./install/bin/challenge
 ```
 
 ### Windows
 
+### PowerShell
+
 ```powershell
-cmake --install build --config Release --prefix package
+cmake --preset conan-release `
+  -DCMAKE_INSTALL_PREFIX="$PWD\install"
+
+cmake --build --preset conan-release --target install
 ```
 
 Run the installed executable:
 
 ```powershell
-.\package\bin\challenge.exe
+.\install\bin\challenge.exe
+```
+
+### Command Prompt
+
+```cmd
+cmake --preset conan-release ^
+  -DCMAKE_INSTALL_PREFIX="%CD%\install"
+
+cmake --build --preset conan-release --target install
+```
+
+Run the installed executable:
+
+```cmd
+.\install\bin\challenge.exe
 ```
 
 ## Conan Package

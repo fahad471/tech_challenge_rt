@@ -50,7 +50,11 @@ std::filesystem::path executable_directory() {
 }
 
 void load_segfault_plugin() {
-    const auto path = executable_directory() / ".." / "lib" / "libplugin_segfault.so";
+    auto path = executable_directory() / "libplugin_segfault.so";
+
+    if (!std::filesystem::exists(path)) {
+        path = executable_directory() / ".." / "lib" / "libplugin_segfault.so";
+    }
 
     std::cout << "Loading plugin from: " << path << '\n';
 

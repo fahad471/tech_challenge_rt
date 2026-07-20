@@ -1,0 +1,53 @@
+{
+    "version": 3,
+    "vendor": {
+        "conan": {}
+    },
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 15,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "conan-msvc-193-x86_64-20-release",
+            "displayName": "'conan-msvc-193-x86_64-20-release' config",
+            "description": "'conan-msvc-193-x86_64-20-release' configure using 'Visual Studio 17 2022' generator",
+            "generator": "Visual Studio 17 2022",
+            "cacheVariables": {
+                "CMAKE_POLICY_DEFAULT_CMP0091": "NEW"
+            },
+            "toolset": {
+                "value": "v143",
+                "strategy": "external"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolchainFile": "generators\\conan_toolchain.cmake",
+            "binaryDir": "D:\\Agile_Robot\\tech_challenge_rt\\test_package\\build\\msvc-193-x86_64-20-release"
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "conan-msvc-193-x86_64-20-release",
+            "configurePreset": "conan-msvc-193-x86_64-20-release",
+            "configuration": "Release",
+            "jobs": 12
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "conan-msvc-193-x86_64-20-release",
+            "configurePreset": "conan-msvc-193-x86_64-20-release",
+            "configuration": "Release",
+            "execution": {
+                "jobs": 12
+            },
+            "environment": {
+                "PATH": "C:\\Users\\izhma\\.conan2\\p\\b\\chall5297362d06c57\\p\\bin;C:\\Users\\izhma\\.conan2\\p\\b\\boostc11234b5486ab\\p\\bin;$penv{PATH}"
+            }
+        }
+    ]
+}

@@ -148,9 +148,9 @@ list(PREPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 # Definition of CMAKE_PREFIX_PATH, CMAKE_XXXXX_PATH
 # The Conan local "generators" folder, where this toolchain is saved.
 list(PREPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR} )
-list(PREPEND CMAKE_LIBRARY_PATH "/home/fahad471/.conan2/p/b/chall83fc5fb07bda0/p/lib" "/home/fahad471/.conan2/p/b/boostd704b3ba5e276/p/lib" "lib" "lib" "lib")
-list(PREPEND CMAKE_INCLUDE_PATH "/home/fahad471/.conan2/p/b/chall83fc5fb07bda0/p/include" "/home/fahad471/.conan2/p/b/boostd704b3ba5e276/p/include" "include" "include" "include")
-set(CONAN_RUNTIME_LIB_DIRS "/home/fahad471/.conan2/p/b/chall83fc5fb07bda0/p/lib" "/home/fahad471/.conan2/p/b/boostd704b3ba5e276/p/lib" "lib" "lib" "lib" )
+list(PREPEND CMAKE_LIBRARY_PATH "/home/fahad471/.conan2/p/b/chall47cf0ddfe6c88/p/lib" "/home/fahad471/.conan2/p/b/boostd704b3ba5e276/p/lib" "lib" "lib" "lib")
+list(PREPEND CMAKE_INCLUDE_PATH "/home/fahad471/.conan2/p/b/chall47cf0ddfe6c88/p/include" "/home/fahad471/.conan2/p/b/boostd704b3ba5e276/p/include" "include" "include" "include")
+set(CONAN_RUNTIME_LIB_DIRS "/home/fahad471/.conan2/p/b/chall47cf0ddfe6c88/p/lib" "/home/fahad471/.conan2/p/b/boostd704b3ba5e276/p/lib" "lib" "lib" "lib" )
 
 endif()
 

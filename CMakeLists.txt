@@ -6,6 +6,27 @@ project(
     LANGUAGES CXX
 )
 
+option(ENABLE_SANITIZERS "Enable AddressSanitizer" OFF)
+
+if(ENABLE_SANITIZERS)
+    if(CMAKE_SYSTEM_NAME STREQUAL "Linux"
+       AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+
+        add_compile_options(
+            -fsanitize=address
+            -fno-omit-frame-pointer
+        )
+
+        add_link_options(
+            -fsanitize=address
+        )
+    else()
+        message(FATAL_ERROR
+            "ENABLE_SANITIZERS is only supported with GCC or Clang on Linux"
+        )
+    endif()
+endif()
+
 # Apply C++20 consistently to all targets.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 20)

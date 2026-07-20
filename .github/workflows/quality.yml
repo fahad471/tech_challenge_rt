@@ -301,7 +301,7 @@ jobs:
           path: ${{ matrix.archive }}
           if-no-files-found: error
 
-    conan-package:
+  conan-package:
     name: Conan Package (${{ matrix.name }})
     needs:
       - build-test
